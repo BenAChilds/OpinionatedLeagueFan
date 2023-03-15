@@ -10,14 +10,21 @@ import praw
 
 load_dotenv()
 
+# dev mode will skip posting and only output to console
+dev_mode = 0
+
 # set up OpenAI API
 openai.api_key = os.getenv('OPENAI_API_KEY')
-prompt = "You are an opinionated Rugby League fan on Reddit.\
-        The " + datetime.date.today().strftime("%Y") + " season has started and you don't follow any one particular team - you love all footy. Most others are die hard fans of one particular team, however.\
-        You have poor grammar and spelling, and you like to use shorthand often.\
-        You like to argue with other users and are not willing to accept that you might be wrong.\
-        Some posts that you respond to may not be specifically about Rugby League.\
-        Do not respond to comments as if they were directed at you personally.\
+model_temperature=1.3
+prompt = "You are an opinionated Rugby League fan on Reddit. \
+        The " + datetime.date.today().strftime("%Y") + " season has started and you don't follow any one particular team - you love all footy. Most others are die hard fans of one particular team, however. \
+        You have poor grammar and spelling, and you like to use shorthand often. \
+        You speak in Australian English. \
+        You like to argue with other users and are not willing to accept that you might be wrong. \
+        Assume that other users are already well-informed of the rules and systems in place in Rugby League. \
+        Some posts that you respond to may not be specifically about Rugby League. \
+        Do not respond to comments as if they were directed at you personally. If comments are directed at an individual, do not respond as if it were directed at you. \
+        Do not try to moderate discussions. \
         If there is not enough context to the post, simply agree."
 
 # set up Reddit API credentials
@@ -74,6 +81,7 @@ while True:
 
                     response = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo",
+                        temperature=model_temperature,
                         messages=[
                                 {"role": "system", "content": prompt},
                                 {"role": "user", "content": "Respond to the following comment: " + comment.body},
@@ -82,10 +90,11 @@ while True:
 
                     # wait a random interval of at least 2 minutes to a maximum of 7 before posting
                     print('Replying with: \n' + response['choices'][0]['message']['content'] + '\n')
-                    print('Waiting to post...')
-                    time.sleep(int(2) + random.randint(0,300))
-                    comment.reply(response['choices'][0]['message']['content'])
-                    print('Posted\n')
+                    if dev_mode == 0:
+                        print('Waiting to post...')
+                        time.sleep(int(2) + random.randint(0,300))
+                        comment.reply(response['choices'][0]['message']['content'])
+                        print('Posted\n')
 
             case 1:
                 # get the latest post
@@ -120,6 +129,7 @@ while True:
 
                     response = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo",
+                        temperature=model_temperature,
                         messages=[
                                 {"role": "system", "content": prompt},
                                 {"role": "user", "content": "Respond to the following new post: " + post.selftext},
@@ -128,10 +138,11 @@ while True:
                     
                     # wait a random interval of at least 2 minutes to a maximum of 7 before posting
                     print('Repling with: \n' + response['choices'][0]['message']['content'] + '\n')
-                    print('Waiting to post...')
-                    time.sleep(int(2) + random.randint(0,300))
-                    post.reply(response['choices'][0]['message']['content'])
-                    print('Posted\n')
+                    if dev_mode == 0:
+                        print('Waiting to post...')
+                        time.sleep(int(2) + random.randint(0,300))
+                        post.reply(response['choices'][0]['message']['content'])
+                        print('Posted\n')
 
                     # update last post id so we don't reply again
                     last_post_id = post.id

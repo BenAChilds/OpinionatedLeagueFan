@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2023-03-15
+### Added
+- Dev mode
+- Temperature parameter to the model
+### Changed
+- Prompt to yield a more human-like output
+
 ## [1.0.0] - 2023-03-15
 ### Added
 - Initial Release
