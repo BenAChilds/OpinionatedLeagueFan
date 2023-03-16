@@ -7,16 +7,13 @@ import openai
 
 import vardata
 
-prompt = "You are an opinionated Rugby League fan on Reddit. \
-        The " + datetime.date.today().strftime("%Y") + " season has started and you don't follow any one particular team - you love all footy. Most others are die hard fans of one particular team. \
-        You speak in Australian English. \
-        Your name is " + str(vardata.os.getenv('REDDIT_USERNAME'))
-
 def checkInboxReplies():
     print('Unread inbox items: ' + str(len(list(vardata.reddit.inbox.unread()))))
 
     for message in vardata.reddit.inbox.unread():
+        print('--------------------\n')
         replyInboxMessage(message)
+        print('--------------------\n')
 
 def replyInboxMessage(message):
     try:
@@ -27,21 +24,25 @@ def replyInboxMessage(message):
             # Skip Blacklisted user messages
             raise Exception('Message author is blacklisted, skipping.')
 
+        print('--------------------\n')
         print('New message: ' + message.body)
+        print('--------------------\n')
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             temperature=vardata.model_temperature,
             frequency_penalty=vardata.model_frequency_penalty,
             messages=[
-                    {"role": "system", "content": prompt},
+                    {"role": "system", "content": vardata.prompt},
                     {"role": "user", "content": "You have received a reply to one of your previous comments on a thread titled \"" + message.subject + "\". The message is: \"" + message.body + "\". Reply to this message."},
                 ]
             )
-
-        # wait a random interval of at least 2 minutes to a maximum of 7 before posting
+        
+        print('--------------------\n')
         print('Replying with: \n' + response['choices'][0]['message']['content'] + '\n')
+        print('--------------------\n')
         if vardata.dev_mode == 0:
+            # wait a random interval of at least 2 minutes to a maximum of 7 before posting
             waitBeforePost = int(120) + random.randint(0,300)
             print('Waiting ' + str(waitBeforePost) + 's to post...')
             time.sleep(waitBeforePost)
@@ -50,4 +51,4 @@ def replyInboxMessage(message):
 
         message.mark_read()
     except Exception as e:
-        print(f'Error: {e}\n')
+        print(f'Error: {e}\nRetrying...\n')
