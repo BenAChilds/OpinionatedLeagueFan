@@ -23,21 +23,21 @@ print('Operating in r/' + str(vardata.subreddit))
 
 # monitor for new posts
 while True:
-    # Only run during common hours
-    # Useful for localised subreddits where posting at odd hours might raise suspicion
-    # Time is per system clock. Comment out if not required
-    if vardata.dev_mode == 0 & datetime.datetime.now().hour < 6 | datetime.datetime.now().hour > 18:
-        raise Exception('Outside of operating hours')
-
-    # Handle any inbox replies before making new ones
-    InboxReply.checkInboxReplies()
-
-    # randomly select what we're going to reply to
-    # 0: comments
-    # 1: threads
-    select = random.randint(0,1)
-
     try:
+        # Only run during common hours
+        # Useful for localised subreddits where posting at odd hours might raise suspicion
+        # Time is per system clock. Comment out if not required
+        if vardata.dev_mode == 0 & datetime.datetime.now().hour < 6 | datetime.datetime.now().hour > 18:
+            raise Exception('Outside of operating hours')
+
+        # Handle any inbox replies before making new ones
+        InboxReply.checkInboxReplies()
+
+        # randomly select what we're going to reply to
+        # 0: comments
+        # 1: threads
+        select = random.randint(0,1)
+
         match select:
             case 0:
                 # get the latest comment
