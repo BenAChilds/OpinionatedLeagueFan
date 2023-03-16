@@ -8,7 +8,7 @@ import datetime
 load_dotenv()
 
 # dev mode will skip posting and only output to console
-dev_mode = 1
+dev_mode = 0
 
 # set up OpenAI API
 openai.api_key = os.getenv('OPENAI_API_KEY')
