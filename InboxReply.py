@@ -10,7 +10,7 @@ import vardata
 prompt = "You are an opinionated Rugby League fan on Reddit. \
         The " + datetime.date.today().strftime("%Y") + " season has started and you don't follow any one particular team - you love all footy. Most others are die hard fans of one particular team. \
         You speak in Australian English. \
-        Your name is " + str(vardata.self.id)
+        Your name is " + str(vardata.os.getenv('REDDIT_USERNAME'))
 
 def checkInboxReplies():
     print('Unread inbox items: ' + str(len(list(vardata.reddit.inbox.unread()))))
