@@ -14,7 +14,8 @@ prompt = "You are an opinionated Rugby League fan on Reddit. \
         You speak in Australian English."
 
 if os.path.exists(vardata.picklefile):
-    last_post_id, last_comment_id = pickle.load(vardata.picklefile)
+    with open(vardata.picklefile, 'rb') as pickle_file:
+        last_post_id, last_comment_id = pickle.load(pickle_file)
 else:
     # touch the picklefile if it doesn't exist
     open(vardata.picklefile, 'w+').close()
