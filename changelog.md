@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2023-03-16
+### Added
+- Comments for new ease of setup
+## Changed
+- Refactored code to be a little cleaner
+- Subreddit string to an env variable
+- Prompting to suit r/AFL
 ## [1.1.0] - 2023-03-16
 ### Added
 - Inbox replies
