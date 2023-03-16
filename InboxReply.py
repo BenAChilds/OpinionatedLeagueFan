@@ -42,8 +42,9 @@ def replyInboxMessage(message):
         # wait a random interval of at least 2 minutes to a maximum of 7 before posting
         print('Replying with: \n' + response['choices'][0]['message']['content'] + '\n')
         if vardata.dev_mode == 0:
-            print('Waiting to post...')
-            time.sleep(int(2) + random.randint(0,300))
+            waitBeforePost = int(120) + random.randint(0,300)
+            print('Waiting ' + str(waitBeforePost) + 's to post...')
+            time.sleep(waitBeforePost)
             message.reply(response['choices'][0]['message']['content'])
             print('Posted\n')
 
