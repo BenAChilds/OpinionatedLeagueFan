@@ -65,7 +65,7 @@ while True:
                         frequency_penalty=vardata.model_frequency_penalty,
                         messages=[
                                 {"role": "system", "content": vardata.prompt},
-                                {"role": "user", "content": f"Read this reddit thread: {comment.submission.permalink}. Now, respond to the following comment: {comment.body}"},
+                                {"role": "user", "content": f"Read this Reddit thread: {comment.submission.permalink}. Now, respond to the following comment: {comment.body}"},
                             ]
                         )
                     
