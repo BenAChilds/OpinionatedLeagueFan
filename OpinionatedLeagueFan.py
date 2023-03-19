@@ -19,7 +19,7 @@ else:
     last_post_id = None
     last_comment_id = None
 
-print('Operating in r/' + str(vardata.subreddit))
+print(f'Operating in r/ {str(vardata.subreddit)}')
 
 # monitor for new posts
 while True:
@@ -56,7 +56,7 @@ while True:
 
                     last_comment_id = comment.id
                     print('--------------------\n')
-                    print('New comment:\n' + comment.body + '\n')
+                    print(f'New comment:\n{comment.body}\n')
                     print('--------------------\n')
 
                     response = vardata.openai.ChatCompletion.create(
@@ -65,18 +65,18 @@ while True:
                         frequency_penalty=vardata.model_frequency_penalty,
                         messages=[
                                 {"role": "system", "content": vardata.prompt},
-                                {"role": "user", "content": "Read this reddit thread: \"" + comment.submission.permalink + "\". Now, respond to the following comment: \"" + comment.body + "\""},
+                                {"role": "user", "content": f"Read this reddit thread: {comment.submission.permalink}. Now, respond to the following comment: {comment.body}"},
                             ]
                         )
                     
                     print('--------------------\n')
 
-                    print('Replying with: \n' + response['choices'][0]['message']['content'] + '\n')
+                    print(f'Replying with: \n{response['choices'][0]['message']['content']}\n')
                     print('--------------------\n')
                     if vardata.dev_mode == 0:
                         # wait a random interval of at least 2 minutes to a maximum of 7 before posting
                         waitBeforePost = int(120) + random.randint(0,300)
-                        print('Waiting until ' + (datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S") + ' to post...')
+                        print(f'Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S")} to post...')
                         time.sleep(waitBeforePost)
                         comment.reply(response['choices'][0]['message']['content'])
                         print('Posted\n')
@@ -117,18 +117,18 @@ while True:
                         frequency_penalty=vardata.model_frequency_penalty,
                         messages=[
                                 {"role": "system", "content": vardata.prompt},
-                                {"role": "user", "content": "The thread title is: \"" + post.title + "\". Respond to the following new post: " + post.selftext + "\""},
+                                {"role": "user", "content": f"The thread title is: \"{post.title}\".\nRespond to the following new post:\n\"{post.selftext}\""},
                             ]
                         )
                     
                     print('--------------------\n')
                     
-                    print('Repling with: \n' + response['choices'][0]['message']['content'] + '\n')
+                    print(f'Repling with: \n{response['choices'][0]['message']['content']}\n')
                     print('--------------------\n')
                     if vardata.dev_mode == 0:
                         # wait a random interval of at least 2 minutes to a maximum of 7 before posting
                         waitBeforePost = int(120) + random.randint(0,300)
-                        print('Waiting until ' + (datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S") + ' to post...')
+                        print(f'Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S")} to post...')
                         time.sleep(waitBeforePost)
                         post.reply(response['choices'][0]['message']['content'])
                         print('Posted\n')
@@ -142,11 +142,11 @@ while True:
 
         # wait 10mins before checking for new posts again
         wait = 600
-        print('Waiting until ' + (datetime.datetime.now() + datetime.timedelta(seconds=int(wait))).time().strftime("%H:%M:%S") + ' to run again...\n')
+        print(f'Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(wait))).time().strftime("%H:%M:%S")} to run again...\n')
         time.sleep(wait)
         
     except Exception as e:
         wait = 60
-        print(f'Error: {e}\nRetrying at ' + (datetime.datetime.now() + datetime.timedelta(seconds=int(wait))).time().strftime("%H:%M:%S") + '...')
+        print(f'Error: {e}\nRetrying at {(datetime.datetime.now() + datetime.timedelta(seconds=int(wait))).time().strftime("%H:%M:%S")}...')
         # If there was an error, we'll wait 60 seconds before trying again
         time.sleep(wait)

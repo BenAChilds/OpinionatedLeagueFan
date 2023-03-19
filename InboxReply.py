@@ -8,7 +8,7 @@ import openai
 import vardata
 
 def checkInboxReplies():
-    print('Unread inbox items: ' + str(len(list(vardata.reddit.inbox.unread()))))
+    print(f'Unread inbox items: {str(len(list(vardata.reddit.inbox.unread())))}')
 
     for message in vardata.reddit.inbox.unread():
         print('--------------------\n')
@@ -34,17 +34,17 @@ def replyInboxMessage(message):
             frequency_penalty=vardata.model_frequency_penalty,
             messages=[
                     {"role": "system", "content": vardata.prompt},
-                    {"role": "user", "content": "You have received a reply to one of your previous comments on a thread titled \"" + message.subject + "\". The message is: \"" + message.body + "\". Reply to this message."},
+                    {"role": "user", "content": f"You have received a reply to one of your previous comments on a thread titled \"{message.subject}\".\nThe message is: \"{message.body}\".\nReply to this message."},
                 ]
             )
         
         print('--------------------\n')
-        print('Replying with: \n' + response['choices'][0]['message']['content'] + '\n')
+        print(f'Replying with: \n{response['choices'][0]['message']['content']}\n')
         print('--------------------\n')
         if vardata.dev_mode == 0:
             # wait a random interval of at least 2 minutes to a maximum of 7 before posting
             waitBeforePost = int(120) + random.randint(0,300)
-            print('Waiting until ' + (datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S") + ' to post...')
+            print(f'Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S")} to post...')
             time.sleep(waitBeforePost)
             message.reply(response['choices'][0]['message']['content'])
             print('Posted\n')
