@@ -16,8 +16,11 @@ else:
     # now load empty values to work with
     last_post_id = None
     last_comment_id = None
+    # save them to the picklefile just in case we hit other errors
+    with open(vardata.picklefile, 'wb') as f:
+        pickle.dump([last_post_id, last_comment_id], f)
 
-print(f'Operating in r/ {str(vardata.subreddit)}')
+print(f'Operating in r/{str(vardata.subreddit)}')
 
 # monitor for new posts
 while True:
@@ -25,7 +28,7 @@ while True:
         # Only run during common hours
         # Useful for localised subreddits where posting at odd hours might raise suspicion
         # Time is per system clock. Comment out if not required
-        if vardata.dev_mode == 0 & datetime.datetime.now().hour < 6 | datetime.datetime.now().hour > 18:
+        if vardata.dev_mode == 0 & (datetime.datetime.now().hour < 6 | datetime.datetime.now().hour > 18):
             raise Exception('Outside of operating hours')
 
         # Handle any inbox replies before making new ones
@@ -70,12 +73,12 @@ while True:
                     
                     print('--------------------\n')
 
-                    print(f'Replying with: \n{response['choices'][0]['message']['content']}\n')
+                    print(f"Replying with: \n{response['choices'][0]['message']['content']}\n")
                     print('--------------------\n')
                     if vardata.dev_mode == 0:
                         # wait a random interval of at least 2 minutes to a maximum of 7 before posting
                         waitBeforePost = int(120) + random.randint(0,300)
-                        print(f'Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S")} to post...')
+                        print(f"Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime('%H:%M:%S')} to post...")
                         time.sleep(waitBeforePost)
                         comment.reply(response['choices'][0]['message']['content'])
                         print('Posted\n')
@@ -106,8 +109,8 @@ while True:
                     
                     print('--------------------\n')
                     # process the new post
-                    print(f'New post:\n{post.title}\n')
-                    print(f'Body:\n{post.selftext}')
+                    print(f"New post:\n{post.title}\n")
+                    print(f"Body:\n{post.selftext}")
                     print('--------------------\n')
 
                     response = vardata.openai.ChatCompletion.create(
@@ -122,12 +125,12 @@ while True:
                     
                     print('--------------------\n')
                     
-                    print(f'Repling with: \n{response['choices'][0]['message']['content']}\n')
+                    print(f"Replying with: \n{response['choices'][0]['message']['content']}\n")
                     print('--------------------\n')
                     if vardata.dev_mode == 0:
                         # wait a random interval of at least 2 minutes to a maximum of 7 before posting
                         waitBeforePost = int(120) + random.randint(0,300)
-                        print(f'Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S")} to post...')
+                        print(f"Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime('%H:%M:%S')} to post...")
                         time.sleep(waitBeforePost)
                         post.reply(response['choices'][0]['message']['content'])
                         print('Posted\n')
@@ -141,11 +144,11 @@ while True:
 
         # wait 10mins before checking for new posts again
         wait = 600
-        print(f'Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(wait))).time().strftime("%H:%M:%S")} to run again...\n')
+        print(f"Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(wait))).time().strftime('%H:%M:%S')} to run again...\n")
         time.sleep(wait)
         
     except Exception as e:
         wait = 60
-        print(f'Error: {e}\nRetrying at {(datetime.datetime.now() + datetime.timedelta(seconds=int(wait))).time().strftime("%H:%M:%S")}...')
+        print(f"Error: {e}\nRetrying at {(datetime.datetime.now() + datetime.timedelta(seconds=int(wait))).time().strftime('%H:%M:%S')}...")
         # If there was an error, we'll wait 60 seconds before trying again
         time.sleep(wait)

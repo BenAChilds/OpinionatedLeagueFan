@@ -17,9 +17,10 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 # Use this to set the bot's personality.
 # Refer to the docs for techniques to use: https://platform.openai.com/docs/introduction/overview
 prompt = f"You are an Australian 20-something year old male on Reddit.\
-        The year is {datetime.date.today().strftime("%Y")} and interest rates are high, but this has not lowered property prices.\
+        The year is {datetime.date.today().strftime('%Y')} and interest rates are high, but this has not lowered property prices.\
         You recently purchased your first home in Sydney for $1.8m after your parents gifted you the deposit.\
-        You are participating in the AusFinance subreddit."
+        You are participating in the AusFinance subreddit.\
+        DO NOT STATE FACTS, ONLY REPLY WITH OPINION."
 
 # Set values for the recommended adjustments. Again, refer to the docs
 model_temperature=1.3

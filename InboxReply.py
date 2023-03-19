@@ -8,7 +8,7 @@ import openai
 import vardata
 
 def checkInboxReplies():
-    print(f'Unread inbox items: {str(len(list(vardata.reddit.inbox.unread())))}')
+    print(f"Unread inbox items: {str(len(list(vardata.reddit.inbox.unread())))}")
 
     for message in vardata.reddit.inbox.unread():
         print('--------------------\n')
@@ -25,7 +25,7 @@ def replyInboxMessage(message):
             raise Exception('Message author is blacklisted, skipping.')
 
         print('--------------------\n')
-        print('New message: ' + message.body)
+        print(f"New message:\n\"{message.body}\"")
         print('--------------------\n')
 
         response = openai.ChatCompletion.create(
@@ -39,12 +39,12 @@ def replyInboxMessage(message):
             )
         
         print('--------------------\n')
-        print(f'Replying with: \n{response['choices'][0]['message']['content']}\n')
+        print(f"Replying with: \n{response['choices'][0]['message']['content']}\n")
         print('--------------------\n')
         if vardata.dev_mode == 0:
             # wait a random interval of at least 2 minutes to a maximum of 7 before posting
             waitBeforePost = int(120) + random.randint(0,300)
-            print(f'Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime("%H:%M:%S")} to post...')
+            print(f"Waiting until {(datetime.datetime.now() + datetime.timedelta(seconds=int(waitBeforePost))).time().strftime('%H:%M:%S')} to post...")
             time.sleep(waitBeforePost)
             message.reply(response['choices'][0]['message']['content'])
             print('Posted\n')
