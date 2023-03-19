@@ -7,8 +7,6 @@ import pickle
 import vardata
 import InboxReply
 
-
-
 if os.path.exists(vardata.picklefile):
     with open(vardata.picklefile, 'rb') as pickle_file:
         last_post_id, last_comment_id = pickle.load(pickle_file)
@@ -36,7 +34,8 @@ while True:
         # randomly select what we're going to reply to
         # 0: comments
         # 1: threads
-        select = random.randint(0,1)
+        # select = random.randint(0,1)
+        select = 0
 
         match select:
             case 0:
